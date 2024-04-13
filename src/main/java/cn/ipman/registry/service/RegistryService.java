@@ -1,6 +1,9 @@
 package cn.ipman.registry.service;
 
+import cn.ipman.registry.model.InstanceMeta;
+
 import java.util.List;
+import java.util.Map;
 
 /**
  * Description for this class
@@ -8,16 +11,22 @@ import java.util.List;
  * @Author IpMan
  * @Date 2024/4/13 19:27
  */
-public class RegistryService {
+public interface RegistryService {
 
-    InstanceMata register(String servieName, InstanceMata instanceMata);
+    InstanceMeta register(String service, InstanceMeta instanceMata);
 
-    InstanceMata unregister(String servieName, InstanceMata instanceMata);
+    InstanceMeta unregister(String service, InstanceMeta instanceMata);
 
-    List<InstanceMata>  getAllInstances(String serviceName);
+    List<InstanceMeta> getAllInstances(String service);
 
+    // 刷新一个实例的状态
+    Long reNew(InstanceMeta instanceMeta, String... service);
 
-    // todo
+    // 获取当前实例的版本
+    Long version(String service);
+
+    // 获取多个实例的版本
+    public Map<String, Long> versions(String... services);
 
 
 }
