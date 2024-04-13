@@ -13,20 +13,20 @@ import java.util.Map;
  */
 public interface RegistryService {
 
-    InstanceMeta register(String service, InstanceMeta instanceMata);
+    InstanceMeta register(String service, InstanceMeta instance);
 
-    InstanceMeta unregister(String service, InstanceMeta instanceMata);
+    InstanceMeta unregister(String service, InstanceMeta instance);
 
     List<InstanceMeta> getAllInstances(String service);
 
     // 刷新一个实例的状态
-    Long reNew(InstanceMeta instanceMeta, String... service);
+    Long reNew(InstanceMeta instance, String... service);
 
     // 获取当前实例的版本
     Long version(String service);
 
     // 获取多个实例的版本
-    public Map<String, Long> versions(String... services);
+    Map<String, Long> versions(String... services);
 
 
 }

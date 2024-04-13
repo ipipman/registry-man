@@ -27,42 +27,42 @@ public class RegistryManService implements RegistryService {
     final static AtomicLong VERSION = new AtomicLong(0);
 
     @Override
-    public InstanceMeta register(String service, InstanceMeta instanceMata) {
+    public InstanceMeta register(String service, InstanceMeta instance) {
         List<InstanceMeta> metas = REGISTRY.get(service);
         // 如果这个服务和实例都存在
         if (metas != null && !metas.isEmpty()) {
-            if (metas.contains(instanceMata)) {
-                log.info(" ====> instance {} already registered", instanceMata.toHttpUrl());
-                instanceMata.setStatus(true);
-                return instanceMata;
+            if (metas.contains(instance)) {
+                log.info(" ====> instance {} already registered", instance.toHttpUrl());
+                instance.setStatus(true);
+                return instance;
             }
         }
         // 如果这个服务不存在,需要注册服务和节点
-        log.info(" ====> register instance {}", instanceMata.toHttpUrl());
-        REGISTRY.add(service, instanceMata);
-        instanceMata.setStatus(true);
+        log.info(" ====> register instance {}", instance.toHttpUrl());
+        REGISTRY.add(service, instance);
+        instance.setStatus(true);
 
         // 记录实例注册时间
-        reNew(instanceMata, service);
+        reNew(instance, service);
         VERSIONS.put(service, VERSION.incrementAndGet());
 
-        return instanceMata;
+        return instance;
     }
 
     @Override
-    public InstanceMeta unregister(String service, InstanceMeta instanceMata) {
+    public InstanceMeta unregister(String service, InstanceMeta instance) {
         List<InstanceMeta> metas = REGISTRY.get(service);
         if (metas == null || metas.isEmpty()) {
             return null;
         }
-        log.info(" ====> unregister instance {}", instanceMata.toHttpUrl());
-        metas.removeIf(m -> m.equals(instanceMata));
-        instanceMata.setStatus(false);
+        log.info(" ====> unregister instance {}", instance.toHttpUrl());
+        metas.removeIf(m -> m.equals(instance));
+        instance.setStatus(false);
 
-        reNew(instanceMata, service);
+        reNew(instance, service);
         VERSIONS.put(service, VERSION.incrementAndGet());
 
-        return instanceMata;
+        return instance;
     }
 
     @Override
@@ -70,10 +70,10 @@ public class RegistryManService implements RegistryService {
         return REGISTRY.get(service);
     }
 
-    public Long reNew(InstanceMeta instanceMeta, String... services) {
+    public Long reNew(InstanceMeta instance, String... services) {
         long now = System.currentTimeMillis();
         for (String service : services) {
-            TIMESTAMPS.put(service + "@" + instanceMeta.toHttpUrl(), now);
+            TIMESTAMPS.put(service + "@" + instance.toHttpUrl(), now);
         }
         return now;
     }

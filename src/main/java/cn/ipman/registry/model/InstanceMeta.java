@@ -45,9 +45,14 @@ public class InstanceMeta {
         return new InstanceMeta("http", host, port, "rpcman");
     }
 
-    public static InstanceMeta from(String url){
+    public static InstanceMeta from(String url) {
         URI uri = URI.create(url);
-        return new InstanceMeta(uri.getScheme(), uri.getPath(), uri.getPort(), uri.getPath().split("/")[1]);
+        return new InstanceMeta(
+                uri.getScheme(),
+                uri.getPath(),
+                uri.getPort(),
+                uri.getPath().substring(0, uri.getPath().indexOf("/"))
+        );
     }
 
     public String toHttpUrl() {
