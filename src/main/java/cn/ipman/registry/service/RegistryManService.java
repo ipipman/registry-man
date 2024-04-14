@@ -1,5 +1,6 @@
 package cn.ipman.registry.service;
 
+import cn.ipman.registry.cluster.Snapshot;
 import cn.ipman.registry.model.InstanceMeta;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.LinkedMultiValueMap;
@@ -21,13 +22,17 @@ import java.util.stream.Collectors;
 @Slf4j
 public class RegistryManService implements RegistryService {
 
-    final static MultiValueMap<String, InstanceMeta> REGISTRY = new LinkedMultiValueMap<>();
-    final static Map<String, Long> VERSIONS = new ConcurrentHashMap<>();
+    // Map<k -> 服务, v -> 实例>
+    public final static MultiValueMap<String, InstanceMeta> REGISTRY = new LinkedMultiValueMap<>();
+    // Map<k -> 服务, v -> 变更后的版本-全局递增>
+    public final static Map<String, Long> VERSIONS = new ConcurrentHashMap<>();
+    // Map<k -> 服务@实例, v -> 变更的时间戳>
     public final static Map<String, Long> TIMESTAMPS = new ConcurrentHashMap<>();
-    final static AtomicLong VERSION = new AtomicLong(0);
+    // 变更后的版本, 全局递增
+    public final static AtomicLong VERSION = new AtomicLong(0);
 
     @Override
-    public InstanceMeta register(String service, InstanceMeta instance) {
+    public synchronized InstanceMeta register(String service, InstanceMeta instance) {
         List<InstanceMeta> metas = REGISTRY.get(service);
         // 如果这个服务和实例都存在
         if (metas != null && !metas.isEmpty()) {
@@ -50,7 +55,7 @@ public class RegistryManService implements RegistryService {
     }
 
     @Override
-    public InstanceMeta unregister(String service, InstanceMeta instance) {
+    public synchronized InstanceMeta unregister(String service, InstanceMeta instance) {
         List<InstanceMeta> metas = REGISTRY.get(service);
         if (metas == null || metas.isEmpty()) {
             return null;
@@ -70,7 +75,7 @@ public class RegistryManService implements RegistryService {
         return REGISTRY.get(service);
     }
 
-    public Long reNew(InstanceMeta instance, String... services) {
+    public synchronized long reNew(InstanceMeta instance, String... services) {
         long now = System.currentTimeMillis();
         for (String service : services) {
             TIMESTAMPS.put(service + "@" + instance.toHttpUrl(), now);
@@ -85,5 +90,29 @@ public class RegistryManService implements RegistryService {
     public Map<String, Long> versions(String... services) {
         return Arrays.stream(services)
                 .collect(Collectors.toMap(x -> x, VERSIONS::get, (a, b) -> b));
+    }
+
+    public static synchronized Snapshot snapshot() {
+        // copy this registry data... to snapshot
+        LinkedMultiValueMap<String, InstanceMeta> registry = new LinkedMultiValueMap<>();
+        registry.addAll(REGISTRY);
+        Map<String, Long> versions = new ConcurrentHashMap<>(VERSIONS);
+        Map<String, Long> timestamps = new ConcurrentHashMap<>(TIMESTAMPS);
+        return new Snapshot(registry, versions, timestamps, VERSION.get());
+    }
+
+    public static synchronized long restore(Snapshot snapshot) {
+        // restore registry data... by snapshot
+        REGISTRY.clear();
+        REGISTRY.addAll(snapshot.getREGISTRY());
+
+        VERSIONS.clear();
+        VERSIONS.putAll(snapshot.getVERSIONS());
+
+        TIMESTAMPS.clear();
+        TIMESTAMPS.putAll(snapshot.getTIMESTAMPS());
+
+        VERSION.set(snapshot.getVersion());
+        return snapshot.getVersion();
     }
 }

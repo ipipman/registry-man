@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Description for this class
+ * Interface for registry service.
  *
  * @Author IpMan
  * @Date 2024/4/13 19:27
@@ -20,7 +20,7 @@ public interface RegistryService {
     List<InstanceMeta> getAllInstances(String service);
 
     // 刷新一个实例的状态
-    Long reNew(InstanceMeta instance, String... service);
+    long reNew(InstanceMeta instance, String... service);
 
     // 获取当前实例的版本
     Long version(String service);
@@ -28,5 +28,6 @@ public interface RegistryService {
     // 获取多个实例的版本
     Map<String, Long> versions(String... services);
 
-
+    // Snapshot snapshot();
+    // void restore(Snapshot snapshot);
 }

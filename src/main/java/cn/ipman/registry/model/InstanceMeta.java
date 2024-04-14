@@ -49,9 +49,9 @@ public class InstanceMeta {
         URI uri = URI.create(url);
         return new InstanceMeta(
                 uri.getScheme(),
-                uri.getPath(),
+                uri.getHost(),
                 uri.getPort(),
-                uri.getPath().substring(0, uri.getPath().indexOf("/"))
+                uri.getPath().substring(1) // - /rpcman to rpcman
         );
     }
 
@@ -67,5 +67,11 @@ public class InstanceMeta {
     public String toMetas() {
         // 实体的元数据,机房、灰度、单元
         return JSON.toJSONString(this.getParameters());
+    }
+
+    public static void main(String[] args) {
+        String instanceUrl = "http://192.168.31.232:9082/rpcman";
+        InstanceMeta instance = InstanceMeta.from(instanceUrl);
+        System.out.println("instance from " +  instance);
     }
 }

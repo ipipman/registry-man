@@ -45,7 +45,7 @@ public class RegistryManController {
 
 
     @RequestMapping("/renews")
-    public Long renew(@RequestParam String services, @RequestBody InstanceMeta instanceMeta) {
+    public long renew(@RequestParam String services, @RequestBody InstanceMeta instanceMeta) {
         log.info(" ====> renews {}", services);
         return registryService.reNew(instanceMeta, services.split(","));
     }
