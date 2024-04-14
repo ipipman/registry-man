@@ -2,9 +2,7 @@ package cn.ipman.registry.cluster;
 
 import cn.ipman.registry.RegistryConfigProperties;
 import cn.ipman.registry.service.RegistryManService;
-import cn.ipman.registry.service.RegistryService;
 import lombok.Getter;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.commons.util.InetUtils;
@@ -34,7 +32,7 @@ public class Cluster {
     static {
         try {
             // 获取当前IP
-            ip = new InetUtils(new InetUtilsProperties())
+            ip =  new InetUtils(new InetUtilsProperties())
                     .findFirstNonLoopbackHostInfo().getIpAddress();
             System.out.println(" ===>>> findFirstNonLoopbackHostInfo().getIpAddress() = " + ip);
         } catch (Exception e) {
@@ -44,9 +42,10 @@ public class Cluster {
 
     public Server myself() { // 192.168.31.232
         if (MYSELF == null) {
-            Server my = new Server("http://" + ip + ":" + port, false, true, -1);
-            System.out.println(" ========>>>>>>  myself: " + my);
-            MYSELF = my;
+            @SuppressWarnings("all")
+            Server myself = new Server("http://" + ip + ":" + port, false, true, -1);
+            System.out.println(" ========>>>>>>  myself: " + myself);
+            MYSELF = myself;
         }
         // 给予注册中心服务里, 最新的版本号
         MYSELF.setVersion(RegistryManService.VERSION.get());
@@ -67,21 +66,13 @@ public class Cluster {
     }
 
 
-    private String convertLocalhost(String url) {
-        if (url.contains("localhost")) {
-            return url.replace("localhost", ip);
-        }
-        if (url.contains("127.0.0.1")) {
-            return url.replace("127.0.0.1", ip);
-        }
-        return url;
-    }
-
     public void init() {
-        // 获取当前Server
+        // 初始化当前 server 的信息
         myself();
+        // 初始化所有 server 的信息
         List<Server> servers = new ArrayList<>();
         for (String url : registryConfigProperties.getServerlist()) {
+            // 如果当前 ip_port 是自身节点时
             if (MYSELF.getUrl().equalsIgnoreCase(url)
                     || MYSELF.getUrl().equals(convertLocalhost(url))) {
                 // 当前server
@@ -101,12 +92,25 @@ public class Cluster {
         this.servers = servers;
         System.out.println(" =======>>>>>> initialized, servers:" + servers);
         System.out.println(" =======>>>>>> initialized, myself:" + myself());
-//        serverHealth = new ServerHealth(this);
-//        serverHealth.checkServerHealth();
+        // 检查sever的状态,默认都是false
+        serverHealth = new ServerHealth(this);
+        serverHealth.checkServerHealth();
+    }
+
+    private String convertLocalhost(String url) {
+        if (url.contains("localhost")) {
+            return url.replace("localhost", ip);
+        }
+        if (url.contains("127.0.0.1")) {
+            return url.replace("127.0.0.1", ip);
+        }
+        return url;
     }
 
     public Server getLeader() {
-        return this.servers.stream().filter(Server::isStatus)
+        // 获取leader节点
+        return this.servers.stream()
+                .filter(Server::isStatus)
                 .filter(Server::isLeader).findFirst().orElse(null);
     }
 
