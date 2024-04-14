@@ -65,7 +65,6 @@ public class Cluster {
         this.registryConfigProperties = registryConfigProperties;
     }
 
-
     public void init() {
         // 初始化当前 server 的信息
         myself();

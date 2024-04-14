@@ -1,20 +1,45 @@
-#### 获取所有服务实例
-GET  http://localhost:9100/findall?service=cn.ipman.rpcman.demo.api.UserService
+#### 获取所有服务实例 8484
+GET  http://localhost:8484/findall?service=cn.ipman.rpcman.demo.api.UserService
 
+#### 获取所有服务实例 8486
+GET  http://localhost:8486/findall?service=cn.ipman.rpcman.demo.api.UserService
 
 
 #### 注册一个服务实例
-GET  http://localhost:9100/reg?service=cn.ipman.rpcman.demo.api.UserService
+GET  http://localhost:8484/reg?service=cn.ipman.rpcman.demo.api.UserService
+Content-Type: application/json
+
+{"context":"rpcman","host":"192.168.31.232","parameters":{"unit":"B002","gray":"false","dc":"shanghai-3","tc":"2000"},"port":9081,"scheme":"http","status":false}
+
+
+#### 取消一个服务实例
+GET  http://localhost:8484/unreg?service=cn.ipman.rpcman.demo.api.UserService
 Content-Type: application/json
 
 {"context":"rpcman","host":"192.168.31.232","parameters":{"unit":"B002","gray":"false","dc":"shanghai-3","tc":"2000"},"port":9081,"scheme":"http","status":false}
 
 
 
-#### 取消一个服务实例
-GET  http://localhost:9100/unreg?service=cn.ipman.rpcman.demo.api.UserService
-Content-Type: application/json
+### 获取集群信息from 8484
+GET http://localhost:8484/cluster
 
-{"context":"rpcman","host":"192.168.31.232","parameters":{"unit":"B002","gray":"false","dc":"shanghai-3","tc":"2000"},"port":9082,"scheme":"http","status":false}
+### 获取集群信息from 8485
+GET http://localhost:8485/cluster
 
+### 获取info信息
+GET http://localhost:8484/info
 
+### 获取myself信息 8484
+GET http://localhost:8484/myself
+
+### 获取myself信息 8485
+GET http://localhost:8485/myself
+
+### 获取快照 8484
+GET http://localhost:8484/snapshot
+
+### 获取快照 8485
+GET http://localhost:8485/snapshot
+
+### 设置集成leader 8485
+GET http://localhost:8485/sm

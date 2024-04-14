@@ -1,6 +1,10 @@
 package cn.ipman.registry;
 
+import cn.ipman.registry.cluster.Cluster;
+import cn.ipman.registry.cluster.Server;
+import cn.ipman.registry.cluster.Snapshot;
 import cn.ipman.registry.model.InstanceMeta;
+import cn.ipman.registry.service.RegistryManService;
 import cn.ipman.registry.service.RegistryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +29,21 @@ public class RegistryManController {
     @Autowired
     private RegistryService registryService;
 
+    @Autowired
+    private Cluster cluster;
+
+
     @RequestMapping("/reg")
     public InstanceMeta registry(@RequestParam String service, @RequestBody InstanceMeta instanceMeta) {
         log.info("register {} @ {}", service, instanceMeta);
+        checkLeader();
         return registryService.register(service, instanceMeta);
     }
 
     @RequestMapping("/unreg")
     public InstanceMeta unRegistry(@RequestParam String service, @RequestBody InstanceMeta instanceMeta) {
         log.info("unregister {} @ {}", service, instanceMeta);
+        checkLeader();
         return registryService.unregister(service, instanceMeta);
     }
 
@@ -44,9 +54,17 @@ public class RegistryManController {
     }
 
 
+    @RequestMapping("/renew")
+    public long renew(@RequestParam String service, @RequestBody InstanceMeta instance) {
+        log.info(" ===> renew {} @ {}", service, instance);
+        checkLeader();
+        return registryService.reNew(instance, service);
+    }
+
     @RequestMapping("/renews")
-    public long renew(@RequestParam String services, @RequestBody InstanceMeta instanceMeta) {
+    public long renews(@RequestParam String services, @RequestBody InstanceMeta instanceMeta) {
         log.info(" ====> renews {}", services);
+        checkLeader();
         return registryService.reNew(instanceMeta, services.split(","));
     }
 
@@ -62,5 +80,45 @@ public class RegistryManController {
         return registryService.versions(services.split(","));
     }
 
+    @RequestMapping("/snapshot")
+    public Snapshot snapshot() {
+        log.info(" ===> snapshot");
+        return RegistryManService.snapshot();
+    }
 
+    @RequestMapping("/cluster")
+    public List<Server> cluster() {
+        log.info(" ===> cluster");
+        return cluster.getServers();
+    }
+
+    @RequestMapping("/info")
+    public Server info() {
+        return myself();
+    }
+
+    @RequestMapping("/myself")
+    public Server myself() {
+        return cluster.myself();
+    }
+
+    @RequestMapping("/sm")
+    public Server setMaster() {
+        cluster.myself().setLeader(!cluster.isLeader());
+        return cluster.myself();
+    }
+
+    @RequestMapping("/")
+    public List<Server> root() {
+        return cluster();
+    }
+
+    void checkLeader() {
+        if (!cluster.isLeader()) {
+            log.error("this server {} is readonly slave, leader {} is writable.",
+                    myself().getUrl(), cluster.getLeader().getUrl());
+            throw new RuntimeException("this server[" + myself().getUrl()
+                    + "] is a slave, can't be written.");
+        }
+    }
 }
