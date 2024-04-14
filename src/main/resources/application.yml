@@ -1,0 +1,12 @@
+server:
+  port: 8484
+
+spring:
+  application:
+    name: registry-man
+
+registry:
+  serverlist:
+    - http://localhost:8484
+    - http://localhost:8485
+    - http://localhost:8486

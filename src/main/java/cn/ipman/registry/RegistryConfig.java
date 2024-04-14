@@ -1,4 +1,4 @@
-package cn.ipman.registry.config;
+package cn.ipman.registry;
 
 import cn.ipman.registry.health.HealthChecker;
 import cn.ipman.registry.health.HealthManChecker;
@@ -26,5 +26,9 @@ public class RegistryConfig {
     public HealthChecker healthChecker(@Autowired RegistryService registryService) {
         return new HealthManChecker(registryService);
     }
+
+
+
+
 
 }
