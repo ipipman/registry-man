@@ -28,7 +28,7 @@ public class RegistryManService implements RegistryService {
     public final static Map<String, Long> VERSIONS = new ConcurrentHashMap<>();
     // Map<k -> 服务@实例, v -> 变更的时间戳>
     public final static Map<String, Long> TIMESTAMPS = new ConcurrentHashMap<>();
-    // 变更后的版本, 全局递增
+    // 注册中心变更后的版本, 全局递增
     public final static AtomicLong VERSION = new AtomicLong(0);
 
     @Override
