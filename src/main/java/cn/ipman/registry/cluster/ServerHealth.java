@@ -93,7 +93,7 @@ public class ServerHealth {
         // leader 选举类
         Election election = new Election();
 
-        // 获取所有有效的 leader 节点
+        // 获取所有, 有效的 leader 节点
         List<Server> servers = cluster.getServers();
         List<Server> masters = servers.stream()
                 .filter(Server::isStatus)

@@ -4,6 +4,8 @@ GET  http://localhost:8484/findall?service=cn.ipman.rpcman.demo.api.UserService
 #### 获取所有服务实例 8486
 GET  http://localhost:8486/findall?service=cn.ipman.rpcman.demo.api.UserService
 
+#### 获取versions 8484
+GET  http://localhost:8484/versions?services=cn.ipman.rpcman.demo.api.UserService
 
 #### 注册一个服务实例
 GET  http://localhost:8484/reg?service=cn.ipman.rpcman.demo.api.UserService
@@ -40,6 +42,9 @@ GET http://localhost:8484/snapshot
 
 ### 获取快照 8485
 GET http://localhost:8485/snapshot
+
+### 获取快照 8486
+GET http://localhost:8486/snapshot
 
 ### 设置集成leader 8485
 GET http://localhost:8485/sm

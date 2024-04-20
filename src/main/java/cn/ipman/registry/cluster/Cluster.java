@@ -20,43 +20,30 @@ import java.util.List;
 @Slf4j
 public class Cluster {
 
-    @Value("${server.port}")
-    String port;
-
     static String ip;
 
-    @Getter
-    Server MYSELF;
-    // Server LEADER;
-
     static {
-        try {
+        try (InetUtils inetUtils = new InetUtils(new InetUtilsProperties())) {
             // 获取当前IP
-            ip =  new InetUtils(new InetUtilsProperties())
-                    .findFirstNonLoopbackHostInfo().getIpAddress();
-            System.out.println(" ===>>> findFirstNonLoopbackHostInfo().getIpAddress() = " + ip);
+            ip = inetUtils.findFirstNonLoopbackHostInfo().getIpAddress();
+            System.out.println(" ===>>> findFirstNonLoopBackHostInfo().getIpAddress() = " + ip);
         } catch (Exception e) {
             ip = "127.0.0.1";
         }
     }
 
-    public Server myself() { // 192.168.31.232
-        if (MYSELF == null) {
-            @SuppressWarnings("all")
-            Server myself = new Server("http://" + ip + ":" + port, false, true, -1);
-            System.out.println(" ========>>>>>>  myself: " + myself);
-            MYSELF = myself;
-        }
-        // 给予注册中心服务里, 最新的版本号
-        MYSELF.setVersion(RegistryManService.VERSION.get());
-        return MYSELF;
-    }
+    @Value("${server.port}")
+    String port;
 
-    RegistryConfigProperties registryConfigProperties;
+    @Getter
+    Server MYSELF;
+    // Server LEADER;
 
     // 注册中心所有的server
     @Getter
     List<Server> servers;
+
+    RegistryConfigProperties registryConfigProperties;
 
     // server健康状态检查
     ServerHealth serverHealth;
@@ -84,7 +71,7 @@ public class Cluster {
                 server.setUrl(convertLocalhost(url));
                 server.setStatus(false);
                 server.setLeader(false);
-                server.setVersion(-1);
+                server.setVersion(-1L);
                 servers.add(server);
             }
         }
@@ -94,6 +81,19 @@ public class Cluster {
         // 检查sever的状态,默认都是false
         serverHealth = new ServerHealth(this);
         serverHealth.checkServerHealth();
+    }
+
+
+    public Server myself() { // 192.168.31.232
+        if (MYSELF == null) {
+            @SuppressWarnings("all")
+            Server myself = new Server("http://" + ip + ":" + port, false, true, -1);
+            System.out.println(" ========>>>>>>  myself: " + myself);
+            MYSELF = myself;
+        }
+        // 给予注册中心服务里, 最新的版本号
+        MYSELF.setVersion(RegistryManService.VERSION.get());
+        return MYSELF;
     }
 
     private String convertLocalhost(String url) {
