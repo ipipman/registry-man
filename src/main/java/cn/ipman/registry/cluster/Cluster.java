@@ -26,7 +26,7 @@ public class Cluster {
         try (InetUtils inetUtils = new InetUtils(new InetUtilsProperties())) {
             // 获取当前IP
             ip = inetUtils.findFirstNonLoopbackHostInfo().getIpAddress();
-            System.out.println(" ===>>> findFirstNonLoopBackHostInfo().getIpAddress() = " + ip);
+            log.debug(" ===>>> findFirstNonLoopBackHostInfo().getIpAddress() = " + ip);
         } catch (Exception e) {
             ip = "127.0.0.1";
         }
@@ -62,11 +62,11 @@ public class Cluster {
             if (MYSELF.getUrl().equalsIgnoreCase(url)
                     || MYSELF.getUrl().equals(convertLocalhost(url))) {
                 // 当前server
-                System.out.println("add myself to servers: " + MYSELF);
+                log.info("add myself to servers: {}", MYSELF);
                 servers.add(MYSELF);
             } else {
                 // 其它server
-                System.out.println("add server to servers: " + url);
+                log.info("add server to servers: " + url);
                 Server server = new Server();
                 server.setUrl(convertLocalhost(url));
                 server.setStatus(false);
@@ -76,8 +76,8 @@ public class Cluster {
             }
         }
         this.servers = servers;
-        System.out.println(" =======>>>>>> initialized, servers:" + servers);
-        System.out.println(" =======>>>>>> initialized, myself:" + myself());
+        log.info(" =======>>>>>> initialized, servers:{}", servers);
+        log.info(" =======>>>>>> initialized, myself:{}", myself());
         // 检查sever的状态,默认都是false
         serverHealth = new ServerHealth(this);
         serverHealth.checkServerHealth();
@@ -88,7 +88,7 @@ public class Cluster {
         if (MYSELF == null) {
             @SuppressWarnings("all")
             Server myself = new Server("http://" + ip + ":" + port, false, true, -1);
-            System.out.println(" ========>>>>>>  myself: " + myself);
+            log.info(" ========>>>>>>  myself:{}", myself);
             MYSELF = myself;
         }
         // 给予注册中心服务里, 最新的版本号

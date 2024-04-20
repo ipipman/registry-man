@@ -12,8 +12,8 @@ import java.util.List;
  * @Author IpMan
  * @Date 2024/4/14 20:35
  */
-@ConfigurationProperties(prefix = "registry")
 @Data
+@ConfigurationProperties(prefix = "registry")
 public class RegistryConfigProperties {
     List<String> serverlist;
 }

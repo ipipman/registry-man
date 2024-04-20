@@ -103,6 +103,7 @@ public class RegistryManService implements RegistryService {
 
     public static synchronized long restore(Snapshot snapshot) {
         // restore registry data... by snapshot
+        // 在获取leader最新数据后, 更新当前注册中心server数据
         REGISTRY.clear();
         REGISTRY.addAll(snapshot.getREGISTRY());
 

@@ -34,7 +34,7 @@ public class HealthManChecker implements HealthChecker {
         // 创建一个给定初始延迟的间隔性的任务，之后的下次执行时间是上一次任务从执行到结束所需要的时间+给定的间隔时间
         executor.scheduleWithFixedDelay(
                 () -> {
-                    System.out.println("Health checker running...");
+                    log.info("Health checker running...");
                     long now = System.currentTimeMillis();
                     RegistryManService.TIMESTAMPS.keySet().forEach(serviceAndInstance -> {
 
@@ -61,9 +61,4 @@ public class HealthManChecker implements HealthChecker {
         executor.shutdown();
     }
 
-    public static void main(String[] args) {
-        long a = 10_000;
-        long b = 10000;
-        System.out.println("a=" + a + ", b=" + b + ", a==b is " + (a == b));
-    }
 }

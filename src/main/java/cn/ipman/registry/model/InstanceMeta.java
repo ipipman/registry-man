@@ -20,6 +20,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"scheme", "host", "port", "context"})
+@SuppressWarnings("unused")
 public class InstanceMeta {
 
     private String scheme;
@@ -36,6 +37,7 @@ public class InstanceMeta {
         this.port = port;
         this.context = context;
     }
+
 
     public String toRcPath() {
         return String.format("%s_%d", host, port);

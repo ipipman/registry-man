@@ -36,21 +36,22 @@ public class ServerHealth {
                         // 检查或重新选举,leader节点
                         doElect();
 
-                        System.out.println(" ===*****%%%$$$>>> isLeader=" + cluster.isLeader()
+                        log.debug(" ===*****%%%$$$>>> isLeader=" + cluster.isLeader()
                                 + ",myself-version=" + cluster.getMYSELF().getVersion()
                                 + ",leader-version=" + cluster.getLeader().getVersion());
 
                         // 如果当前server不是leader节点, 并且当前版本比leader节点版本低, 需要同步最新的registry
-                        if (!cluster.isLeader() && cluster.getMYSELF().getVersion() < cluster.getLeader().getVersion()) {
+                        if (!cluster.isLeader()
+                                && cluster.getMYSELF().getVersion() < cluster.getLeader().getVersion()) {
                             // 改成首次刷 TODO 优先级低
                             // 改成 判断版本号 DONE
                             // 改成 判断LEADER是否改变 DONE
                             // 把这个类拆分为多个类 DONE
                             // 控制读写分离 TODO 客户端
                             // 优化实时性同步 TODO 优先级低
-                            System.out.println(" ===*****%%%$$$>>> syncFromLeader: " + cluster.getLeader());
+                            log.debug(" ===*****%%%$$$>>> syncFromLeader: " + cluster.getLeader());
                             long v = syncSnapshotFromLeader();
-                            System.out.println(" ===*****%%%$$$>>> sync success new version: " + v);
+                            log.debug(" ===*****%%%$$$>>> sync success new version: " + v);
                         }
 
                     } catch (Throwable t) {
@@ -65,7 +66,29 @@ public class ServerHealth {
         cluster.getServers().stream()
                 .filter(s -> !s.equals(cluster.MYSELF)) // 过滤掉当前server
                 .forEach(this::checkServerInfo); // 检查其它server的状态
-        System.out.println(" =====>>>>>> updateServer info: " + (System.currentTimeMillis() - start) + " ms");
+        log.debug(" =====>>>>>> updateServer info: " + (System.currentTimeMillis() - start) + " ms");
+    }
+
+
+    private void doElect() {
+        // leader 选举类
+        Election election = new Election();
+
+        // 获取所有, 有效的 leader 节点
+        List<Server> servers = cluster.getServers();
+        List<Server> masters = servers.stream()
+                .filter(Server::isStatus)
+                .filter(Server::isLeader).collect(Collectors.toList());
+
+        // 没有leader任何节点时, 重新选举
+        if (masters.isEmpty()) {
+            log.warn(" =========>>>>> ELECT: no masters: {}", servers);
+            election.elect(cluster.myself(), servers);
+        } else if (masters.size() > 1) {
+            // 如果有多个leader节存在, 需要重新选举一个版本最高的节点出来
+            log.warn(" =========>>>>> ELECT: more than one master: {}", masters);
+            election.elect(cluster.myself(), servers);
+        }
     }
 
     public void checkServerInfo(Server server) {
@@ -80,7 +103,7 @@ public class ServerHealth {
             server.setVersion(serverInfo.getVersion());
             server.setLeader(serverInfo.isLeader());
         } catch (RuntimeException ex) {
-            log.error(" =========>>>>> health check failed for {}", server);//, ex);
+            log.warn(" =========>>>>> health check failed for {}", server);//, ex);
             // server状态标记为异常
             if (server.isStatus()) {
                 server.setStatus(false);
@@ -88,28 +111,6 @@ public class ServerHealth {
             }
         }
     }
-
-    private void doElect() {
-        // leader 选举类
-        Election election = new Election();
-
-        // 获取所有, 有效的 leader 节点
-        List<Server> servers = cluster.getServers();
-        List<Server> masters = servers.stream()
-                .filter(Server::isStatus)
-                .filter(Server::isLeader).collect(Collectors.toList());
-
-        // 没有leader任何节点时, 重新选举
-        if (masters.isEmpty()) {
-            log.error(" =========>>>>> ELECT: no masters: {}", servers);
-            election.elect(cluster.myself(), servers);
-        } else if (masters.size() > 1) {
-            // 如果有多个leader节存在, 需要重新选举一个版本最高的节点出来
-            log.error(" =========>>>>> ELECT: more than one master: {}", masters);
-            election.elect(cluster.myself(), servers);
-        }
-    }
-
 
     private long syncSnapshotFromLeader() {
         try {

@@ -46,6 +46,7 @@
             <version>4.12.0</version>
         </dependency>
 
+        <!--  使用 InetUtils 获取IP     -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-commons</artifactId>

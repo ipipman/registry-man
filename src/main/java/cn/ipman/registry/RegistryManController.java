@@ -32,7 +32,6 @@ public class RegistryManController {
     @Autowired
     private Cluster cluster;
 
-
     @RequestMapping("/reg")
     public InstanceMeta registry(@RequestParam String service, @RequestBody InstanceMeta instanceMeta) {
         log.info("register {} @ {}", service, instanceMeta);
@@ -113,6 +112,9 @@ public class RegistryManController {
         return cluster();
     }
 
+    /**
+     * 只有Leader节点才能注册和反注册
+     */
     void checkLeader() {
         if (!cluster.isLeader()) {
             log.error("this server {} is readonly slave, leader {} is writable.",

@@ -4,11 +4,8 @@ GET  http://localhost:8484/findall?service=cn.ipman.rpcman.demo.api.UserService
 #### 获取所有服务实例 8486
 GET  http://localhost:8486/findall?service=cn.ipman.rpcman.demo.api.UserService
 
-#### 获取versions 8484
-GET  http://localhost:8484/versions?services=cn.ipman.rpcman.demo.api.UserService
-
 #### 注册一个服务实例
-GET  http://localhost:8484/reg?service=cn.ipman.rpcman.demo.api.UserService
+GET  http://localhost:8485/reg?service=cn.ipman.rpcman.demo.api.UserService
 Content-Type: application/json
 
 {"context":"rpcman","host":"192.168.31.232","parameters":{"unit":"B002","gray":"false","dc":"shanghai-3","tc":"2000"},"port":9081,"scheme":"http","status":false}
@@ -48,3 +45,12 @@ GET http://localhost:8486/snapshot
 
 ### 设置集成leader 8485
 GET http://localhost:8485/sm
+
+#### 获取versions 8484
+GET  http://localhost:8484/versions?services=cn.ipman.rpcman.demo.api.UserService
+
+#### 获取versions 8485
+GET  http://localhost:8485/versions?services=cn.ipman.rpcman.demo.api.UserService
+
+#### 获取versions 8486
+GET  http://localhost:8486/versions?services=cn.ipman.rpcman.demo.api.UserService
