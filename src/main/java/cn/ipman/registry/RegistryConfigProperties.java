@@ -15,5 +15,9 @@ import java.util.List;
 @Data
 @ConfigurationProperties(prefix = "registry")
 public class RegistryConfigProperties {
+    /**
+     * 服务器列表，存储了注册中心服务器的地址信息。
+     * 这个属性会绑定配置文件中registry.serverList的值，允许配置多个服务器地址。
+     */
     List<String> serverlist;
 }
