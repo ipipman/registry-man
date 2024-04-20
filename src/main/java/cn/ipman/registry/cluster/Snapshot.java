@@ -7,7 +7,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import java.util.Map;
 
 /**
- * 注册中心, 快照类，用于保存系统或服务的当前状态。
+ * 注册中心<快照类>用于保存系统或服务的当前状态。
  *
  * @Author IpMan
  * @Date 2024/4/14 19:30
