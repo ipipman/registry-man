@@ -43,26 +43,14 @@ public class ServerHealth {
 
                         // 进行leader节点选举
                         doElect();
-
                         log.debug(" ===*****%%%$$$>>> isLeader=" + cluster.isLeader()
                                 + ",myself-version=" + cluster.getMYSELF().getVersion()
                                 + ",leader-version=" + cluster.getLeader().getVersion());
 
-                        // 如果当前服务器不是Leader且版本较低，则从Leader同步最新注册信息
-                        if (!cluster.isLeader()
-                                && cluster.getMYSELF().getVersion() < cluster.getLeader().getVersion()) {
-                            // 改成首次刷 TODO 优先级低
-                            // 改成 判断版本号 DONE
-                            // 改成 判断LEADER是否改变 DONE
-                            // 把这个类拆分为多个类 DONE
-                            // 控制读写分离 TODO 客户端
-                            // 优化实时性同步 TODO 优先级低
-
-                            log.debug(" ===*****%%%$$$>>> syncFromLeader: " + cluster.getLeader());
-                            // 从Leader同步快照
-                            long v = syncSnapshotFromLeader();
-                            log.debug(" ===*****%%%$$$>>> sync success new version: " + v);
-                        }
+                        // 如果当前服务器不是Leader且版本较低，则从Leader同步最新注册信息, 从Leader同步快照
+                        log.debug(" ===*****%%%$$$>>> syncFromLeader: " + cluster.getLeader());
+                        long v = syncSnapshotFromLeader();
+                        log.debug(" ===*****%%%$$$>>> sync success new version: " + v);
 
                     } catch (Throwable t) {
                         t.printStackTrace();
@@ -136,14 +124,23 @@ public class ServerHealth {
 
     /**
      * 从Leader同步快照数据
+     * 改成首次刷 TODO 优先级低
+     * 改成 判断版本号 DONE
+     * 改成 判断LEADER是否改变 DONE
+     * 把这个类拆分为多个类 DONE
+     * 控制读写分离 TODO 客户端
+     * 优化实时性同步 TODO 优先级低
      *
      * @return 同步后的新版本号，若失败则返回-1
      */
     private long syncSnapshotFromLeader() {
         try {
-            log.info(" =========>>>>> syncSnapshotFromLeader {}", cluster.getLeader().getUrl() + "/snapshot");
-            Snapshot snapshot = HttpInvoker.httpGet(cluster.getLeader().getUrl() + "/snapshot", Snapshot.class);
-            return RegistryManService.restore(snapshot);
+            if (!cluster.isLeader()
+                    && cluster.getMYSELF().getVersion() < cluster.getLeader().getVersion()) {
+                log.info(" =========>>>>> syncSnapshotFromLeader {}", cluster.getLeader().getUrl() + "/snapshot");
+                Snapshot snapshot = HttpInvoker.httpGet(cluster.getLeader().getUrl() + "/snapshot", Snapshot.class);
+                return RegistryManService.restore(snapshot);
+            }
         } catch (Exception ex) {
             log.error(" =========>>>>> syncSnapshotFromLeader failed.", ex);
         }
