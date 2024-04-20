@@ -16,8 +16,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"url"})
 public class Server {
-    private String url;
-    private boolean leader; // 是否被选举为leader
-    private boolean status; // server的状态
-    private long version; // server的版本
+    private String url;     // 服务器的URL地址
+    private boolean leader; // 标记该服务器是否被选举为leader
+    private boolean status; // 服务器的状态，通常用于表示服务器是否在线或离线
+    private long version;   // 服务器的版本
 }
