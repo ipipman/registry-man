@@ -24,7 +24,7 @@ import java.util.Map;
  */
 @RestController
 @Slf4j
-public class RegistryManController {
+public class IpManRegistryController {
 
     @Autowired
     private RegistryService registryService; // 注册中心服务
