@@ -1,5 +1,5 @@
 #### 注册一个服务实例1
-GET  http://localhost:8484/reg?service=cn.ipman.rpcman.demo.api.UserService
+GET  http://localhost:8484/reg?service=app1_public_dev_cn.ipman.rpc.demo.api.UserService_1.0
 Content-Type: application/json
 
 {"context":"rpcman","host":"192.168.31.232","parameters":{"unit":"B002","gray":"false","dc":"shanghai-3","tc":"2000"},"port":9081,"scheme":"http","status":false}
@@ -7,7 +7,7 @@ Content-Type: application/json
 
 
 #### 注册一个服务实例2
-GET  http://localhost:8484/reg?service=cn.ipman.rpcman.demo.api.UserService
+GET  http://localhost:8484/reg?service=app1_public_dev_cn.ipman.rpc.demo.api.UserService_1.0
 Content-Type: application/json
 
 {"context":"rpcman","host":"192.168.31.232","parameters":{"unit":"B002","gray":"false","dc":"shanghai-3","tc":"2000"},"port":9082,"scheme":"http","status":false}
@@ -15,21 +15,21 @@ Content-Type: application/json
 
 
 #### 注册一个服务实例3
-GET  http://localhost:8484/reg?service=cn.ipman.rpcman.demo.api.UserService
+GET  http://localhost:8484/reg?service=app1_public_dev_cn.ipman.rpc.demo.api.UserService_1.0
 Content-Type: application/json
 
 {"context":"rpcman","host":"192.168.31.232","parameters":{"unit":"B002","gray":"false","dc":"shanghai-3","tc":"2000"},"port":9083,"scheme":"http","status":false}
 
 
 #### 注册一个服务实例4
-GET  http://localhost:8484/reg?service=cn.ipman.rpcman.demo.api.UserService
+GET  http://localhost:8484/reg?service=app1_public_dev_cn.ipman.rpc.demo.api.UserService_1.0
 Content-Type: application/json
 
 {"context":"rpcman","host":"192.168.31.232","parameters":{"unit":"B002","gray":"false","dc":"shanghai-3","tc":"2000"},"port":9084,"scheme":"http","status":false}
 
 
 #### 注册一个服务实例5
-GET  http://localhost:8484/reg?service=cn.ipman.rpcman.demo.api.UserService
+GET  http://localhost:8484/reg?service=app1_public_dev_cn.ipman.rpc.demo.api.UserService_1.0
 Content-Type: application/json
 
 {"context":"rpcman","host":"192.168.31.232","parameters":{"unit":"B002","gray":"false","dc":"shanghai-3","tc":"2000"},"port":9085,"scheme":"http","status":false}
