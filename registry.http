@@ -44,7 +44,7 @@ GET http://localhost:8485/snapshot
 GET http://localhost:8486/snapshot
 
 ### 设置集成leader 8485
-GET http://localhost:8485/sm
+GET http://localhost:8484/sm
 
 #### 获取versions 8484
 GET  http://localhost:8484/versions?services=app1_public_dev_cn.ipman.rpc.demo.api.UserService_1.0

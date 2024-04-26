@@ -49,10 +49,12 @@ public class HealthManChecker implements HealthChecker {
                     long now = System.currentTimeMillis();
                     // 遍历所有已注册的服务实例，检查其是否超时
                     RegistryManService.TIMESTAMPS.keySet().forEach(serviceAndInstance -> {
+
                         // 检查服务实例的最后更新时间是否超过超时时间，如果是，则将其从注册表中移除
                         long timestamp = RegistryManService.TIMESTAMPS.get(serviceAndInstance);
                         if (now - timestamp > timeout) {
                             log.info(" === > Health checker: {} is down", serviceAndInstance);
+
                             // 解析服务名称和实例URL
                             int index = serviceAndInstance.indexOf("@");
                             String service = serviceAndInstance.substring(0, index);

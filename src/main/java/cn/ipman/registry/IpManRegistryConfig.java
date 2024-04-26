@@ -1,6 +1,8 @@
 package cn.ipman.registry;
 
 import cn.ipman.registry.cluster.Cluster;
+import cn.ipman.registry.health.HealthChecker;
+import cn.ipman.registry.health.HealthManChecker;
 import cn.ipman.registry.service.RegistryManService;
 import cn.ipman.registry.service.RegistryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +34,10 @@ public class IpManRegistryConfig {
      * @param registryService 注册服务实例，通过自动装配获取。
      * @return 返回健康检查服务实例。
      */
-//    @Bean(initMethod = "start", destroyMethod = "stop")
-//    public HealthChecker healthChecker(@Autowired RegistryService registryService) {
-//        return new HealthManChecker(registryService);
-//    }
+    @Bean(initMethod = "start", destroyMethod = "stop")
+    public HealthChecker healthChecker(@Autowired RegistryService registryService) {
+        return new HealthManChecker(registryService);
+    }
 
     /**
      * 配置集群管理bean，使用RegistryConfigProperties作为配置。
