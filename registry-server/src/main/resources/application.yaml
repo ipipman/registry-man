@@ -1,0 +1,17 @@
+server:
+  port: 8484
+
+spring:
+  application:
+    name: registry-server
+
+registry:
+  serverlist:
+    - http://localhost:8484
+    - http://localhost:8485
+    - http://localhost:8486
+
+logging:
+  level:
+    root: error
+    cn.ipman.registry: debug
