@@ -1,6 +1,6 @@
 package cn.ipman.registry.core.cluster;
 
-import cn.ipman.registry.core.conf.RegistryConfigProperties;
+import cn.ipman.registry.core.config.RegistryConfigProperties;
 import cn.ipman.registry.core.service.RegistryManService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

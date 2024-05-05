@@ -6,12 +6,12 @@
     <parent>
         <groupId>io.github.ipipman</groupId>
         <artifactId>registry-man</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>${registryman.version}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>registry-core</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${registryman.version}</version>
     <name>registry-core</name>
     <description>registry-core</description>
 
@@ -45,6 +45,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <version>${spring.boot.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>6.1.5</version>
         </dependency>
 
     </dependencies>

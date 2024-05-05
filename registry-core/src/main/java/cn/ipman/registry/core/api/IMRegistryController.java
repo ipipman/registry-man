@@ -1,4 +1,4 @@
-package cn.ipman.registry.server;
+package cn.ipman.registry.core.api;
 
 import cn.ipman.registry.core.cluster.Cluster;
 import cn.ipman.registry.core.cluster.Server;

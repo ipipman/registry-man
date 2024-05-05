@@ -6,23 +6,17 @@
     <parent>
         <groupId>io.github.ipipman</groupId>
         <artifactId>registry-man</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>${registryman.version}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>registry-server</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${registryman.version}</version>
     <name>registry-server</name>
     <description>registry-server</description>
 
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <version>${spring.boot.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -37,15 +31,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>6.1.5</version>
-        </dependency>
-
-        <dependency>
             <groupId>io.github.ipipman</groupId>
             <artifactId>registry-core</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${registryman.version}</version>
         </dependency>
     </dependencies>
 

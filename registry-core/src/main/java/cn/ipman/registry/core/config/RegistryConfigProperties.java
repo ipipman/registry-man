@@ -1,4 +1,4 @@
-package cn.ipman.registry.core.conf;
+package cn.ipman.registry.core.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

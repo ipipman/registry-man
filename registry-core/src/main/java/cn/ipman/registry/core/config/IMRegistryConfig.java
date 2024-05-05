@@ -1,4 +1,4 @@
-package cn.ipman.registry.core.conf;
+package cn.ipman.registry.core.config;
 
 
 import cn.ipman.registry.core.cluster.Cluster;
@@ -7,6 +7,9 @@ import cn.ipman.registry.core.health.HealthManChecker;
 import cn.ipman.registry.core.service.RegistryManService;
 import cn.ipman.registry.core.service.RegistryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -47,6 +50,7 @@ public class IMRegistryConfig {
      * @return 返回集群管理实例。
      */
     @Bean(initMethod = "init")
+    @ConditionalOnMissingClass
     public Cluster cluster(@Autowired RegistryConfigProperties registryConfigProperties){
         return new Cluster(registryConfigProperties);
     }
